@@ -409,7 +409,7 @@ h2 { font-size: 1rem; margin: 0 0 12px; }
   font-weight: 700;
   font-size: 0.9rem;
 }
-.choice-text { flex: 1; padding-top: 1px; }
+.choice-text { flex: 1; padding-top: 1px; white-space: pre-line; }
 .choice .mark { flex: none; font-weight: 700; font-size: 1.1rem; }
 .choice.correct { border-color: var(--ok); background: var(--ok-soft); }
 .choice.correct .choice-label { background: var(--ok); color: #fff; }
@@ -429,6 +429,27 @@ h2 { font-size: 1rem; margin: 0 0 12px; }
 .feedback.ng { border-color: var(--ng); background: var(--ng-soft); }
 .feedback.ng strong { color: var(--ng); }
 .feedback p { margin: 6px 0 0; color: var(--text); }
+
+.glossary {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+.glossary summary {
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+.glossary summary small { font-weight: 500; color: var(--muted); margin-left: 4px; }
+.glossary dl { margin: 0; padding: 0 16px 8px; }
+.glossary dl > div {
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+.glossary dt { font-weight: 700; font-size: 0.88rem; color: var(--accent); }
+.glossary dd { margin: 2px 0 0; font-size: 0.86rem; color: var(--text-2); line-height: 1.6; }
 
 .next { margin-top: 16px; width: 100%; }
 .hint { font-size: 0.82rem; margin: 12px 0 0; }

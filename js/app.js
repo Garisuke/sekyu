@@ -112,6 +112,60 @@
     return q.source ? q.id.split('-')[1] : 'original';
   }
 
+  // ---------- 用語集 ----------
+  // 先頭の文字ごとに見出し語・別名を長い順に並べておき，文中を最長一致で走査する
+  // （「公開鍵暗号方式」が「公開鍵」と重複して拾われないようにするため）
+  const glossaryIndex = new Map();
+  for (const entry of window.GLOSSARY || []) {
+    for (const key of [entry.term, ...(entry.aliases || [])]) {
+      const list = glossaryIndex.get(key[0]) || [];
+      list.push({ key, entry });
+      glossaryIndex.set(key[0], list);
+    }
+  }
+  glossaryIndex.forEach((list) => list.sort((a, b) => b.key.length - a.key.length));
+
+  const isAlnum = (c) => !!c && /[A-Za-z0-9]/.test(c);
+
+  // 文章に出てくる用語を，出現順に重複なく返す
+  function findTerms(texts) {
+    const found = [];
+    for (const text of texts) {
+      let i = 0;
+      while (i < text.length) {
+        const hit = (glossaryIndex.get(text[i]) || []).find(({ key }) =>
+          text.startsWith(key, i) &&
+          // 英字の略語は単語の途中で一致させない（例：「CA」を「CAPTCHA」の中で拾わない）
+          !(isAlnum(key[0]) && isAlnum(text[i - 1])) &&
+          !(isAlnum(key[key.length - 1]) && isAlnum(text[i + key.length])));
+        if (hit) {
+          if (!found.includes(hit.entry)) found.push(hit.entry);
+          i += hit.key.length;
+        } else {
+          i++;
+        }
+      }
+    }
+    return found;
+  }
+
+  const GLOSSARY_OPEN_KEY = 'sekyu:glossaryOpen';
+  function glossaryOpen() {
+    try { return localStorage.getItem(GLOSSARY_OPEN_KEY) !== '0'; } catch (e) { return true; }
+  }
+
+  function renderGlossary(q) {
+    const terms = findTerms([q.question, ...q.choices, q.explanation]);
+    if (terms.length === 0) return '';
+    return `
+      <details class="glossary"${glossaryOpen() ? ' open' : ''}>
+        <summary>用語メモ <small>${terms.length}語</small></summary>
+        <dl>
+          ${terms.map((t) => `<div><dt>${escapeHtml(t.term)}</dt><dd>${escapeHtml(t.desc)}</dd></div>`).join('')}
+        </dl>
+      </details>`;
+  }
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, (c) => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -431,6 +485,7 @@
             <p>${escapeHtml(q.explanation)}</p>
             ${q.source ? `<p class="source">出典：${escapeHtml(q.source)}（解説は本サイト独自）</p>` : ''}
           </div>
+          ${renderGlossary(q)}
           <button class="btn primary next" id="next">${quiz.index + 1 < total ? '次の問題へ' : '結果を見る'}</button>
         ` : `<p class="hint muted">キーボードの 1〜${q.choices.length} でも選べます</p>`}
       </article>`;
@@ -444,6 +499,12 @@
         location.hash = '#/';
       }
     });
+    const glossary = app.querySelector('.glossary');
+    if (glossary) {
+      glossary.addEventListener('toggle', () => {
+        try { localStorage.setItem(GLOSSARY_OPEN_KEY, glossary.open ? '1' : '0'); } catch (e) { /* 保存できなくても表示には影響しない */ }
+      });
+    }
     const next = document.getElementById('next');
     if (next) {
       next.addEventListener('click', nextQuestion);
