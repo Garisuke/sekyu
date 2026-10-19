@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>セキュ勉</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="#/" class="brand">🔐 セキュ勉</a>
+    <select id="exam-select" aria-label="資格を選択"></select>
+    <nav class="nav">
+      <a href="#/" data-route="dashboard">ダッシュボード</a>
+      <a href="#/practice" data-route="practice">問題演習</a>
+      <a href="#/review" data-route="review">復習<span id="review-badge" class="badge" hidden></span></a>
+      <a href="#/settings" data-route="settings">設定</a>
+    </nav>
+  </header>
+
+  <main id="app" class="container"></main>
+
+  <footer class="site-footer">
+    過去問の出典：<a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/index.html" target="_blank" rel="noopener">IPA 情報処理技術者試験 過去問題</a>（情報セキュリティマネジメント試験 午前，平成30年度春期〜令和元年度秋期）。
+    各問題に年度・期・問番号を表示しています。表形式の選択肢などを表示の都合でテキストに直した問題には「一部改変」と記載しています。
+    解説およびオリジナル問題は本サイトが独自に作成したもので，IPAとは関係ありません。
+  </footer>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+
+  <script src="js/questions.js"></script>
+  <script src="js/past/2019r01a.js"></script>
+  <script src="js/past/2019h31h.js"></script>
+  <script src="js/past/2018h30a.js"></script>
+  <script src="js/past/2018h30h.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
