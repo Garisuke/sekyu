@@ -78,6 +78,9 @@ h2 { font-size: 1rem; margin: 0 0 12px; }
   text-decoration: none;
 }
 #exam-select {
+  min-width: 0;
+  max-width: 100%;
+  text-overflow: ellipsis;
   font: inherit;
   font-size: 0.85rem;
   padding: 4px 8px;
@@ -497,6 +500,7 @@ h2 { font-size: 1rem; margin: 0 0 12px; }
 /* ---------- スマホ ---------- */
 @media (max-width: 640px) {
   .tiles { grid-template-columns: repeat(2, 1fr); }
+  #exam-select { width: 100%; }
   .nav { margin-left: 0; width: 100%; gap: 2px; }
   .nav a { padding: 6px 8px; font-size: 0.85rem; }
   .bar-cell { width: 35%; }
